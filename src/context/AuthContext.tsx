@@ -25,14 +25,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('fuel_user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      // Set default auth header for axios
-      axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+    try {
+      const savedUser = localStorage.getItem('fuel_user');
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        // Set default auth header for axios
+        axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+      }
+    } catch (err) {
+      console.error('Failed to load user from localStorage:', err);
+      localStorage.removeItem('fuel_user');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = (userData: User) => {

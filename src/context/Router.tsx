@@ -6,22 +6,6 @@ import Register from '../pages/Register';
 import NotFound from '../pages/NotFound';
 import { useAuth } from './AuthContext';
 
-// Auth Guard for protected routes
-const AuthGuard = ({ adminOnly = false }: { adminOnly?: boolean }) => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
-
-  if (loading) return null; // Or a loader
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (adminOnly && !isAdmin) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
-};
 
 // Public Only Guard (Login/Register)
 const PublicOnly = () => {
@@ -39,16 +23,6 @@ const PublicOnly = () => {
 // Define routes
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Dashboard />,
-      },
-    ],
-  },
-  {
     element: <PublicOnly />,
     children: [
       {
@@ -60,6 +34,16 @@ const router = createBrowserRouter([
         element: <Register />,
       },
     ]
+  },
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+    ],
   },
   {
     path: '*',
