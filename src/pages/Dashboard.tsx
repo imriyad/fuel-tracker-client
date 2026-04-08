@@ -102,7 +102,12 @@ export default function Dashboard() {
                <button className="bg-slate-100 dark:bg-slate-800 p-4 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                   <SlidersHorizontal size={20} />
                </button>
-               <Button className="px-8 h-full rounded-xl">Refresh</Button>
+               <Button 
+                className="px-8 h-full rounded-xl"
+                onClick={() => queryClient.invalidateQueries({ queryKey: ['stations'] })}
+               >
+                 Refresh
+               </Button>
             </div>
           </div>
         </div>
