@@ -5,6 +5,7 @@ import type { Variants } from 'framer-motion';
 import { Search, SlidersHorizontal, Map as MapIcon, Zap, Droplets, Info, Plus } from 'lucide-react';
 import FuelStationCard from '../components/FuelStationCard';
 import StationModal from '../components/StationModal';
+import StationDetailsModal from '../components/StationDetailsModal';
 import Button from '../components/ui/Button';
 import { stationApi } from '../api/apiService';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<any>(null);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -42,6 +44,11 @@ export default function Dashboard() {
   const handleEdit = (station: any) => {
     setSelectedStation(station);
     setIsModalOpen(true);
+  };
+
+  const handleViewDetails = (station: any) => {
+    setSelectedStation(station);
+    setIsDetailsOpen(true);
   };
 
   const handleAdd = () => {
@@ -151,6 +158,7 @@ export default function Dashboard() {
                     address={station.location}
                     onEdit={() => handleEdit(station)}
                     onDelete={() => handleDelete(station.id)}
+                    onViewDetails={() => handleViewDetails(station)}
                   />
                 ))
               ) : (
@@ -203,6 +211,16 @@ export default function Dashboard() {
             isOpen={isModalOpen} 
             onClose={() => setIsModalOpen(false)} 
             onSuccess={() => queryClient.invalidateQueries({ queryKey: ['stations'] })}
+            station={selectedStation}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isDetailsOpen && (
+          <StationDetailsModal 
+            isOpen={isDetailsOpen} 
+            onClose={() => setIsDetailsOpen(false)} 
             station={selectedStation}
           />
         )}

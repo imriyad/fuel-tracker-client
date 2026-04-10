@@ -13,9 +13,10 @@ interface StationProps {
   isAdmin?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  onViewDetails?: () => void;
 }
 
-export default function FuelStationCard({ name, availability, distance, price, address, map_url, isAdmin, onEdit, onDelete }: StationProps) {
+export default function FuelStationCard({ name, availability, distance, price, address, map_url, isAdmin, onEdit, onDelete, onViewDetails }: StationProps) {
   const statusConfig = {
     'In Stock': { color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-500/20', label: 'In Stock' },
     'Low': { color: 'text-amber-600 bg-amber-50 dark:bg-amber-500/10 border-amber-100 dark:border-amber-500/20', label: 'Low Stock' },
@@ -74,7 +75,7 @@ export default function FuelStationCard({ name, availability, distance, price, a
             </>
           ) : (
             <>
-              <Button variant="secondary" size="sm" className="hidden sm:inline-flex gap-2">
+              <Button variant="secondary" size="sm" className="hidden sm:inline-flex gap-2" onClick={onViewDetails}>
                 Details
               </Button>
               <Button 
