@@ -9,12 +9,13 @@ interface StationProps {
   distance: string;
   price: number;
   address?: string;
+  map_url?: string;
   isAdmin?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export default function FuelStationCard({ name, availability, distance, price, address, isAdmin, onEdit, onDelete }: StationProps) {
+export default function FuelStationCard({ name, availability, distance, price, address, map_url, isAdmin, onEdit, onDelete }: StationProps) {
   const statusConfig = {
     'In Stock': { color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-500/20', label: 'In Stock' },
     'Low': { color: 'text-amber-600 bg-amber-50 dark:bg-amber-500/10 border-amber-100 dark:border-amber-500/20', label: 'Low Stock' },
@@ -76,7 +77,20 @@ export default function FuelStationCard({ name, availability, distance, price, a
               <Button variant="secondary" size="sm" className="hidden sm:inline-flex gap-2">
                 Details
               </Button>
-              <Button variant="primary" size="sm" className="gap-2 group/btn">
+              <Button 
+                variant="primary" 
+                size="sm" 
+                className="gap-2 group/btn"
+                onClick={() => {
+                  if (map_url) {
+                    window.open(map_url, '_blank');
+                  } else {
+                    // Fallback to searching the address on Google Maps
+                    const query = encodeURIComponent(`${name} ${address || ''}`);
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                  }
+                }}
+              >
                 Directions
                 <Navigation2 size={14} className="group-hover/btn:translate-x-1 transition-transform" />
               </Button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, MapPin, Fuel, DollarSign } from 'lucide-react';
+import { X, MapPin, Fuel, DollarSign, Navigation2 } from 'lucide-react';
 import Input from './ui/Input';
 import Button from './ui/Button';
 import { stationApi } from '../api/apiService';
@@ -17,7 +17,8 @@ export default function StationModal({ isOpen, onClose, onSuccess, station }: St
     location: '',
     fuel_type: 'Petrol',
     price: '',
-    availability: 'In Stock'
+    availability: 'In Stock',
+    map_url: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,7 +30,8 @@ export default function StationModal({ isOpen, onClose, onSuccess, station }: St
         location: station.location,
         fuel_type: station.fuel_type,
         price: station.price.toString(),
-        availability: station.availability
+        availability: station.availability,
+        map_url: station.map_url || ''
       });
     } else {
       setFormData({
@@ -37,7 +39,8 @@ export default function StationModal({ isOpen, onClose, onSuccess, station }: St
         location: '',
         fuel_type: 'Petrol',
         price: '',
-        availability: 'In Stock'
+        availability: 'In Stock',
+        map_url: ''
       });
     }
   }, [station, isOpen]);
@@ -95,6 +98,14 @@ export default function StationModal({ isOpen, onClose, onSuccess, station }: St
             placeholder="123 Street Ave, City, ST"
             icon={<MapPin size={16} />}
             required
+          />
+
+          <Input
+            label="Google Maps / Directions URL"
+            value={formData.map_url}
+            onChange={(e) => setFormData({ ...formData, map_url: e.target.value })}
+            placeholder="https://goo.gl/maps/..."
+            icon={<Navigation2 size={16} />}
           />
 
           <div className="grid grid-cols-2 gap-4">
