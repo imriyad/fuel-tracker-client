@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<any>(null);
-  const { isAdmin } = useAuth();
+  const { isAdmin, isAuthenticated, user } = useAuth();
   const queryClient = useQueryClient();
 
   // Queries
@@ -91,6 +91,18 @@ export default function Dashboard() {
           Monitor real-time fuel levels, compare prices at nearby stations, and optimize your journey.
         </p>
 
+        {isAuthenticated ? (
+          <div className="max-w-3xl mx-auto mt-6 rounded-3xl border border-slate-200/80 bg-slate-50 p-5 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+            <p className="text-sm font-semibold">Welcome back, {user?.name}! Your account is active.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">You can now access saved features and receive customer-only updates.</p>
+          </div>
+        ) : (
+          <div className="max-w-3xl mx-auto mt-6 rounded-3xl border border-slate-200/80 bg-white p-5 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+            <p className="text-sm font-semibold">You are currently browsing as a guest.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Sign in to save favorites, track your fuel history, and unlock premium features.</p>
+          </div>
+        )}
+
         {/* Search Bar */}
         <div className="max-w-3xl mx-auto relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-brand to-indigo-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
@@ -122,8 +134,8 @@ export default function Dashboard() {
 
       {/* Main Grid */}
       <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8 space-y-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="lg:col-span-12 space-y-6">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-4 gap-4">
             <div>
               <h2 className="text-2xl font-bold">Featured Stations</h2>
               <p className="text-slate-400 text-sm">Showing live status from the database</p>
@@ -137,7 +149,7 @@ export default function Dashboard() {
           </div>
           
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="h-64 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-2xl"></div>
               ))}
@@ -148,7 +160,7 @@ export default function Dashboard() {
               <Button variant="ghost" onClick={() => queryClient.invalidateQueries({ queryKey: ['stations'] })} className="mt-4">Retry</Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {stations?.length > 0 ? (
                 stations.map((station: any) => (
                   <FuelStationCard 
@@ -162,7 +174,7 @@ export default function Dashboard() {
                   />
                 ))
               ) : (
-                <div className="col-span-2 p-12 text-center card-premium">
+                <div className="col-span-1 sm:col-span-2 md:col-span-3 p-12 text-center card-premium">
                   <p className="text-slate-400">No stations found matching your search.</p>
                 </div>
               )}
@@ -170,12 +182,40 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="lg:col-span-4 space-y-6">
-           <div className="card-premium h-80 relative overflow-hidden flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900 border-2">
-              <MapIcon size={64} className="text-slate-200 dark:text-slate-800 mb-4 animate-pulse" />
-              <div className="text-center px-8">
-                <h3 className="font-bold mb-1">Live Map Integration</h3>
-                <p className="text-xs text-slate-400">Real-time GPS tracking coming soon for all premium members.</p>
+        <div className="lg:col-span-12 space-y-6">
+           <div className="card-premium h-80 p-6 flex flex-col justify-between border-2">
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] bg-emerald-50 text-emerald-600">
+                    Premium
+                  </div>
+                  <MapIcon size={26} className="text-slate-400" />
+                </div>
+
+                <h3 className="text-xl font-semibold mb-2">Live Map Integration</h3>
+                <p className="text-sm text-slate-500 mb-5">Real-time GPS tracking is coming soon for premium members.</p>
+
+                <div className="space-y-3 text-sm text-slate-600">
+                  <div className="flex items-start gap-3">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Track your route live on a map.</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Discover nearby stations and ETAs.</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Get live fuel availability updates.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200/80 dark:border-slate-800">
+                <span className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Coming soon</span>
+                <Button size="sm" variant="ghost" className="text-slate-700 dark:text-slate-200">
+                  Notify me
+                </Button>
               </div>
            </div>
 

@@ -49,11 +49,11 @@ import { useAuth } from '../context/AuthContext';
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-400">
+        {/* <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-400">
           <a href="#stations" className="hover:text-brand transition-colors">Near Me</a>
           <a href="#prices" className="hover:text-brand transition-colors">Prices</a>
           <a href="#about" className="hover:text-brand transition-colors">How it Works</a>
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
