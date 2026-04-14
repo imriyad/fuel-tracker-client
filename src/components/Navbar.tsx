@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
   export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
-    const { user, logout, isAuthenticated } = useAuth();
+    const { user, logout, isAuthenticated, isAdmin } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,11 +49,19 @@ import { useAuth } from '../context/AuthContext';
           </span>
         </div>
 
-        {/* <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-400">
-          <a href="#stations" className="hover:text-brand transition-colors">Near Me</a>
-          <a href="#prices" className="hover:text-brand transition-colors">Prices</a>
-          <a href="#about" className="hover:text-brand transition-colors">How it Works</a>
-        </div> */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-400">
+          <Link to="/" className="hover:text-brand transition-colors">Stations</Link>
+          {isAuthenticated && (
+            <>
+              <Link to="/vehicles" className="hover:text-brand transition-colors">Vehicles</Link>
+              <Link to="/fuel-entries" className="hover:text-brand transition-colors">Fuel History</Link>
+              <Link to="/statistics" className="hover:text-brand transition-colors">Stats</Link>
+              {isAdmin && (
+                <Link to="/admin" className="px-3 py-1 bg-brand/10 text-brand rounded-lg hover:bg-brand hover:text-white transition-all text-xs">Admin</Link>
+              )}
+            </>
+          )}
+        </div>
 
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
